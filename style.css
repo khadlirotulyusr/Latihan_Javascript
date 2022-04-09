@@ -1,0 +1,46 @@
+body{
+    min-height: 400px;
+    margin-bottom: 100px;
+    clear: both;
+}
+/*Style untuk header*/
+.header{
+    background-color:darkcyan;
+    color: white;
+    padding: 15px;
+    text-align: center;
+    height: 95px;
+}
+
+/*Style untuk navigasi*/
+.topnav{
+    overflow: hidden;
+    background-color: darkseagreen;
+    color: white;
+    
+}
+/* Style untuk link menu navigasi*/
+.topnav a{
+    float: left;
+    display: block;
+    color: white;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+}
+.topnav a:hover{
+    background-color: black;
+
+}
+.isi{
+    margin: 10px;
+}
+
+.footer{
+    background-color:darkcyan;
+    color: white;
+    padding: 15px;
+    text-align: center;
+    position: fixed;
+
+}

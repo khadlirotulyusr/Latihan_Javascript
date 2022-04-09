@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <!-- CSS only -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3"
+      crossorigin="anonymous"
+    />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="header">
+      <h1
+        style="
+          font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande',
+            'Lucida Sans', Arial, sans-serif;
+        "
+      >
+        BATCH 7
+      </h1>
+    </div>
+
+    <div class="topnav">
+      <a ref="#"><b>Home</b></a>
+      <a ref="#"><b>Employee</b></a>
+      <a ref="#"><b>Department</b></a>
+      <a href="index.html"><b>Country</b></a>
+    </div>
+
+    <div class="isi">
+      <h1
+        style="
+          font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS',
+            sans-serif;
+        "
+      >
+        Country
+      </h1>
+      <a href="add.html"
+        ><button onclick="" class="btn btn-primary">Insert Data</button></a
+      >
+      <input
+        type="text"
+        id="countryName"
+        class="fixed-top btn btn-light"
+        style="margin-left: 73%; margin-top: 4%"
+        placeholder="Search Country Name..."
+      />
+      <button
+        class="fixed-top btn btn-light"
+        style="margin-left: 90%; margin-top: 4%"
+        onclick="findByCountryName(document.getElementById('countryName').value)"
+      >
+        Search
+      </button>
+
+      <table id="tabel" class="table table-striped table-hover"></table>
+
+      <script>
+        function LoadContent() {
+          //ClearResult();
+          var xhr = new XMLHttpRequest();
+          var url = "http://localhost:8080/country/findAll";
+
+          xhr.onloadend = function () {
+            if (this.responseText !== "") {
+              var resp = JSON.parse(this.responseText);
+              var ctry = resp.data;
+              document.getElementById("tabel").innerHTML = `<tr>
+                    <th>No.</th>
+                    <th>Country ID</th>
+                    <th>Country Name</th>
+                    <th>Region ID</th>
+                    <th>Update Data</th>
+                    <th>Delete Data</th>
+            </tr>`;
+              for (let i = 0; i < ctry.length; i++) {
+                const element = ctry[i];
+                document.getElementById("tabel").innerHTML += `<tr><td>${
+                  i + 1
+                }</td>
+              <td>${element.countryId}</td>
+              <td>${element.countryName}</td>
+              <td>${element.regionId}</td>
+              <td><button onclick="edit('${
+                element.countryId
+              }')" class="btn btn-warning">Update</button></td>
+              <td><button onclick="deleteData('${
+                element.countryId
+              }')" class="btn btn-danger">Delete</button></td>
+  
+              </tr>`;
+              }
+            }
+          };
+
+          xhr.open("GET", url, true);
+          xhr.send();
+        }
+
+        function ClearResult() {
+          document.getElementById("tabel").innerHTML = "";
+        }
+
+        function deleteData(i) {
+          var xhr = new XMLHttpRequest();
+          var url = `http://localhost:8080/country/${i}`;
+          console.log(i);
+
+          konfirm = confirm("Apakah Anda yakin akan menghapus data ini?");
+          if (konfirm) {
+            xhr.open("DELETE", url, true);
+            xhr.send();
+            alert("Data berhasil dihapus");
+            setTimeout(LoadContent(), 3000);
+          }
+        }
+
+        function edit(id) {
+          window.location = "update.html?id=" + id;
+        }
+
+        function findByCountryName(countryName) {
+          var xhr = new XMLHttpRequest();
+          var url = `http://localhost:8080/country/findByCountryNamePaging?countryName=${countryName}&page=0&size=50`;
+          xhr.onerror = function () {
+            alert("Gagal mengambil data");
+          };
+          xhr.onloadend = function () {
+            if (this.responseText !== "") {
+              var result = JSON.parse(this.responseText);
+              var ctry = result.data;
+              document.getElementById("tabel").innerHTML = `<tr>
+                    <th>Country ID</th>
+                    <th>Country Name</th>
+                    <th>Region ID</th>
+                    <th>Update Data</th>
+                    <th>Delete Data</th>
+            </tr>`;
+              for (let i = 0; i < ctry.length; i++) {
+                const element = ctry[i];
+                document.getElementById(
+                  "tabel"
+                ).innerHTML += `<tr><td>${element.countryId}</td>
+              <td>${element.countryName}</td>
+              <td>${element.regionId}</td>
+              <td><button onclick="edit('${element.countryId}')" class="btn btn-warning">Update</button></td>
+              <td><button onclick="deleteData('${element.countryId}')" class="btn btn-danger">Delete</button></td>
+              </tr>`;
+              }
+            }
+          };
+
+          xhr.open("GET", url, true);
+          xhr.send();
+        }
+
+        LoadContent();
+      </script>
+
+      <!-- JavaScript Bundle with Popper -->
+      <script
+        src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
+        crossorigin="anonymous"
+      ></script>
+    </div>
+
+    <div class="footer fixed-bottom">
+      <p>khadlirotulyusr &copy; 2022</p>
+    </div>
+  </body>
+</html>
